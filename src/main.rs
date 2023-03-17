@@ -1,12 +1,34 @@
-use postgres::*;
-use serde::{Serialize, Deserialize};
+mod sql;
+
+use crate::sql::*;
+
+use actix_web::*;
 
 
+#[get("/")]
+async fn GetAll() -> impl Responder {
+    let rows = SqlQuery(0, "".to_string(), 0).await.unwrap();
 
-fn main() {
-    let mut client = Client::connect("username = doadmin password = AVNS_AphIofhrOO6vcAN8gCP host = db-postgresql-nyc1-78249-do-user-7865624-0.b.db.ondigitalocean.com port = 25060 database = defaultdb sslmode = disable", NoTls).unwrap();
+    let serialized = serde_json::to_string(&rows).unwrap();
 
-    let GET = client.prepare("SELECT * FROM todos").unwrap();
-    let DELETE = client.prepare("DELETE FROM todos WHERE todo_id = $1").unwrap();
-    let POST = client.prepare("INSERT INTO todos (todo_id, todo_text) VALUES ($1, $2)").unwrap();
+    HttpResponse::Ok().body(serialized)
+}
+
+/*
+#[get("/delete/{id}")]
+async fn Delete(path: web::Path<i32>) -> impl Responder {
+    let id = path.into_inner();
+}
+
+ */
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .service(GetAll)
+        })
+        .bind(("127.0.0.1", 8088))?
+        .run()
+        .await
 }
