@@ -51,7 +51,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_count_handler)
             .service(inc_count_handler)
         })
-        .bind(("127.0.0.1", 8088))?
+        .bind(("0.0.0.0", 80))?
         .run()
         .await
 }
