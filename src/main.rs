@@ -4,29 +4,52 @@ use crate::sql::*;
 
 use actix_web::*;
 
-
-#[get("/")]
-async fn GetAll() -> impl Responder {
-    let rows = SqlQuery(0, "".to_string(), 0).await.unwrap();
-
+#[get("/get-todos")]
+async fn get_all() -> impl Responder {
+    let rows = get_all_tasks().await.unwrap();
     let serialized = serde_json::to_string(&rows).unwrap();
-
     HttpResponse::Ok().body(serialized)
 }
 
-/*
-#[get("/delete/{id}")]
-async fn Delete(path: web::Path<i32>) -> impl Responder {
-    let id = path.into_inner();
+#[get("/add-todo/{id}/{text}")]
+async fn add(path: web::Path<(i32, String)>) -> impl Responder {
+    let (id, text) = path.into_inner();
+    add_task(id, &text).await;
+    let res = format!("Added todo with ID {id} and text {text}");
+    HttpResponse::Ok().body(res)
 }
 
- */
+#[get("/delete-todo/{id}")]
+async fn delete(path: web::Path<i32>) -> impl Responder {
+    let id = path.into_inner();
+    delete_task(id).await;
+    let res = format!("Deleted todo with ID {id}");
+    HttpResponse::Ok().body(res)
+}
+
+#[get("/get-count")]
+async fn get_count_handler() -> impl Responder {
+    let count = get_count().await;
+    let serialized = serde_json::to_string(&count).unwrap();
+    HttpResponse::Ok().body(serialized)
+}
+
+#[get("/inc-count")]
+async fn inc_count_handler() -> impl Responder {
+    inc_count().await;
+
+    HttpResponse::Ok().body("Successfully incremented id!")
+}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(GetAll)
+            .service(get_all)
+            .service(delete)
+            .service(add)
+            .service(get_count_handler)
+            .service(inc_count_handler)
         })
         .bind(("127.0.0.1", 8088))?
         .run()
