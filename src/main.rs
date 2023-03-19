@@ -39,7 +39,7 @@ async fn get_count_handler() -> impl Responder {
 async fn inc_count_handler() -> impl Responder {
     inc_count().await;
 
-    HttpResponse::Ok().insert_header(("Access-Control-Allow-Origin","true")).body("Successfully incremented id!")
+    HttpResponse::Ok().insert_header(("Access-Control-Allow-Origin","")).body("Successfully incremented id!")
 }
 
 #[actix_web::main]
