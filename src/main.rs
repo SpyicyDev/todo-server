@@ -9,7 +9,7 @@ use actix_web::*;
 async fn get_all() -> impl Responder {
     let rows = get_all_tasks().await.unwrap();
     let serialized = serde_json::to_string(&rows).unwrap();
-    HttpResponse::Ok().body(serialized)
+    HttpResponse::Ok().insert_header(("Access-Control-Allow-Origin","true")).body(serialized)
 }
 
 #[get("/add-todo/{id}/{text}")]
@@ -17,7 +17,7 @@ async fn add(path: web::Path<(i32, String)>) -> impl Responder {
     let (id, text) = path.into_inner();
     add_task(id, &text).await;
     let res = format!("Added todo with ID {id} and text {text}");
-    HttpResponse::Ok().body(res)
+    HttpResponse::Ok().insert_header(("Access-Control-Allow-Origin","true")).body(res)
 }
 
 #[get("/delete-todo/{id}")]
@@ -25,29 +25,27 @@ async fn delete(path: web::Path<i32>) -> impl Responder {
     let id = path.into_inner();
     delete_task(id).await;
     let res = format!("Deleted todo with ID {id}");
-    HttpResponse::Ok().body(res)
+    HttpResponse::Ok().insert_header(("Access-Control-Allow-Origin","true")).body(res)
 }
 
 #[get("/get-count")]
 async fn get_count_handler() -> impl Responder {
     let count = get_count().await;
     let serialized = serde_json::to_string(&count).unwrap();
-    HttpResponse::Ok().body(serialized)
+    HttpResponse::Ok().insert_header(("Access-Control-Allow-Origin","true")).body(serialized)
 }
 
 #[get("/inc-count")]
 async fn inc_count_handler() -> impl Responder {
     inc_count().await;
 
-    HttpResponse::Ok().body("Successfully incremented id!")
+    HttpResponse::Ok().insert_header(("Access-Control-Allow-Origin","true")).body("Successfully incremented id!")
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        let cors = Cors::permissive();
         App::new()
-            .wrap(cors)
             .service(get_all)
             .service(delete)
             .service(add)
