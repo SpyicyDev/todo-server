@@ -45,10 +45,7 @@ async fn inc_count_handler() -> impl Responder {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        let cors = Cors::default()
-            .allow_any_header()
-            .allow_any_method()
-            .allow_any_origin();
+        let cors = Cors::permissive();
         App::new()
             .wrap(cors)
             .service(get_all)
