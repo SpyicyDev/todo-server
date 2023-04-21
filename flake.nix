@@ -24,6 +24,7 @@
         # For `nix build` & `nix run`:
         defaultPackage = naersk'.buildPackage {
           src = ./.;
+          nativeBuildInputs = [ pkgs.openssl ];
         };
 
         # For `nix develop` (optional, can be skipped):
