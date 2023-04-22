@@ -3,7 +3,7 @@ use postgres_openssl::MakeTlsConnector;
 
 use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct TodoItem {
     pub todo_id: i32,
     pub todo_text: String
@@ -63,11 +63,11 @@ pub async fn inc_count() {
 
 async fn prep_sql() -> tokio_postgres::Client {
     let mut builder = SslConnector::builder(SslMethod::tls()).unwrap();
-    builder.set_ca_file("./ca-certificate.crt").unwrap();
+    builder.set_ca_file("/root/todo-server/ca-certificate.crt").unwrap();
     let connector = MakeTlsConnector::new(builder.build());
 
     let (client, connection) =
-        tokio_postgres::connect("postgresql://doadmin:AVNS_AphIofhrOO6vcAN8gCP@db-postgresql-nyc1-78249-do-user-7865624-0.b.db.ondigitalocean.com:25060/defaultdb?sslmode=require", connector).await.unwrap();
+        tokio_postgres::connect("postgresql://doadmin:AVNS_AphIofhrOO6vcAN8gCP@private-db-postgresql-nyc1-78249-do-user-7865624-0.b.db.ondigitalocean.com:25060/defaultdb?sslmode=require", connector).await.unwrap();
 
     // The connection object performs the actual communication with the database,
     // so spawn it off to run on its own.
