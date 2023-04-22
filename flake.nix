@@ -33,13 +33,6 @@
           program = "${defaultPackage}/bin/todo-server";
         };
 
-        bundlers.${system} = rec {
-          identity = drv: drv;
-
-          todo-server = drv: defaultPackage;
-
-          default = identity;
-        };
 
         # For `nix develop` (optional, can be skipped):
         devShell = pkgs.mkShell {
