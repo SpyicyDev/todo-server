@@ -29,7 +29,7 @@
 
         defaultApp = {
           type = "app";
-          program = "${self.defaultPackage}/bin/todo-server";
+          program = "${defaultPackage}/bin/todo-server";
         };
 
         # For `nix develop` (optional, can be skipped):
