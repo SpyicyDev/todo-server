@@ -36,7 +36,7 @@
         bundlers.${system} = rec {
           identity = drv: drv;
 
-          blender_2_79 = drv: self.packages.x86_64-linux.blender_2_79;
+          todo-server = drv: defaultPackage;
 
           default = identity;
         };
