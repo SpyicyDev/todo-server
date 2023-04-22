@@ -33,6 +33,14 @@
           program = "${defaultPackage}/bin/todo-server";
         };
 
+        bundlers.${system} = rec {
+          identity = drv: drv;
+
+          blender_2_79 = drv: self.packages.x86_64-linux.blender_2_79;
+
+          default = identity;
+        };
+
         # For `nix develop` (optional, can be skipped):
         devShell = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [ rust-bin.beta.latest.default ];
