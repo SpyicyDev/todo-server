@@ -18,7 +18,7 @@
           overlays = [ rust-overlay.overlays.default ];
         };
 
-        rustToolchain = pkgs.rust-bin.beta.latest.override {
+        rustToolchain = pkgs.rust-bin.beta.latest.default.override {
           targets = [ "x86_64-unknown-linux-gnu" ];
         };
 
