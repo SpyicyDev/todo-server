@@ -18,25 +18,35 @@
           overlays = [ rust-overlay.overlays.default ];
         };
 
-        naersk' = pkgs.callPackage naersk {};
+        # setting up naersk
+        naersk' = pkgs.callPackage naersk {
+          cargo = pkgs.rust-bin.beta.latest.default;
+          rustc = pkgs.rust-bin.beta.latest.default;
+        };
 
-      in rec {
-        # For `nix build` & `nix run`:
-        defaultPackage = naersk'.buildPackage {
+        rustBuild = naersk'.buildPackage {
+          name = "todo-server";
+
           src = ./.;
           nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl ];
 
           postInstall = "cp ./ca-certificate.crt $out/ca-certificate.crt";
         };
-
-        defaultApp = {
-          type = "app";
-          program = "${defaultPackage}/bin/todo-server";
+ 
+        dockerImage = pkgs.dockerTools.buildImage {
+          name = "todo-server";
+          config = { Cmd = [ "${rustBuild}/bin/todo-server" ]; };
         };
 
+      in rec {
+        packages = {
+          rustPackage = rustBuild;
+          docker = dockerImage;
+        };
 
-        # For `nix develop` (optional, can be skipped):
+        defaultPackage = rustBuild; 
+
         devShell = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [ rust-bin.beta.latest.default ];
         };
