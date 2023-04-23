@@ -18,7 +18,6 @@
       let
         pkgs = (import nixpkgs) {
           inherit system;
-          overlays = [ rust-overlay.overlays.default ];
         };
 
         toolchain = with fenix.packages.${system};
@@ -52,7 +51,7 @@
         defaultPackage = packages.rustPackage.x86_64-linux;
 
         devShell = pkgs.mkShell {
-          nativeBuildInputs = with pkgs; [ rust-bin.beta.latest.default ];
+          nativeBuildInputs =  [ fenix.packages.${system}.defaultToolchain ];
         };
       }
     );
