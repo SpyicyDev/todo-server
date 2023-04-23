@@ -25,8 +25,8 @@
 
         # setting up naersk
         naersk' = pkgs.callPackage naersk {
-          cargo = toolChain;
-          rustc = ToolChain;
+          cargo = rustToolchain;
+          rustc = rustToolchain;
         };
 
       in rec {
