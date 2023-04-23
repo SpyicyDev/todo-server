@@ -7,22 +7,25 @@
     flake-utils.url = "github:numtide/flake-utils";
     naersk.url = "github:nix-community/naersk";
 
-    rust-overlay.url = "github:oxalica/rust-overlay";
-    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils, naersk, rust-overlay }:
+  outputs = { self, nixpkgs, flake-utils, naersk, fenix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = (import nixpkgs) {
           inherit system;
-            overlays = [ rust-overlay.overlays.default ];
         };
 
-        toolchain = pkgs.rust-bin.beta.latest.default.override {
-          extensions = [ "rust-src" ];
-          targets = [ "x86_64-unknown-linux-musl" ];
-        };
+        toolchain = with fenix.packages.${system};
+          combine [
+            default.rustc
+            default.cargo
+            targets.x86_64-unknown-linux-gnu.default.rust-std
+          ];
 
         # setting up naersk
         naersk' = naersk.lib.${system}.override {
@@ -33,9 +36,9 @@
       in rec {
         packages.rustPackage-x86_64-linux = naersk'.buildPackage {
           src = ./.;
-          nativeBuildInputs = [ pkgs.pkg-config ];
-          buildInputs = [ pkgs.openssl pkgs.zstd ];
-          CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+          nativeBuildInputs = [ pkgs.pkg-config pkgs.zstd ];
+          buildInputs = [ pkgs.openssl ];
+          CARGO_BUILD_TARGET = "x86_64-unknown-linux-gnu";
         };
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
@@ -44,7 +47,7 @@
         };
 
         devShell = pkgs.mkShell {
-          nativeBuildInputs =  [ pkgs.rust-bin.beta.latest.default ];
+          nativeBuildInputs =  [ fenix.packages.${system}.default ];
         };
       }
     );
