@@ -36,7 +36,7 @@
  
         dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
-          config = { Cmd = [ "${self.packages.x86_64.rustPackage}/bin/todo-server" ]; };
+          config = { Cmd = [ "${self.packages.x86_64-linux.rustPackage}/bin/todo-server" ]; };
         };
 
       in rec {
