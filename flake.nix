@@ -39,6 +39,7 @@
           nativeBuildInputs = [ pkgs.pkg-config pkgs.zstd pkgs.pkgsStatic.cc ];
           buildInputs = [ pkgs.openssl ];
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+          CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
         };
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
