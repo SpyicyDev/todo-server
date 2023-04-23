@@ -31,7 +31,7 @@
         };
 
       in rec {
-        packages.rustPackage.x86_64-linux = naersk'.buildPackage {
+        packages.rustPackage-x86_64-linux = naersk'.buildPackage {
           src = ./.;
           nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl ];
