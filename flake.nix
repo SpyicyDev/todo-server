@@ -24,7 +24,7 @@
           combine [
             beta.rustc
             beta.cargo
-            targets.x86_64-unknown-linux-gnu.latest.rust-std
+            targets.x86_64-unknown-linux-gnu.beta.rust-std
           ];
 
         # setting up naersk
