@@ -63,7 +63,7 @@ pub async fn inc_count() {
 
 async fn prep_sql() -> tokio_postgres::Client {
     let mut builder = SslConnector::builder(SslMethod::tls()).unwrap();
-    builder.set_ca_file("./ca-certificate.crt").unwrap();
+    builder.set_ca_file("../ca-certificate.crt").unwrap();
     let connector = MakeTlsConnector::new(builder.build());
 
     let (client, connection) =
