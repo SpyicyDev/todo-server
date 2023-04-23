@@ -34,7 +34,7 @@
         packages.rustPackage-x86_64-linux = naersk'.buildPackage {
           src = ./.;
           nativeBuildInputs = [ pkgs.pkg-config ];
-          buildInputs = [ pkgs.openssl ];
+          buildInputs = [ pkgs.openssl pkgs.zstd ];
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-gnu";
         };
 
