@@ -22,7 +22,6 @@
           targets = [ "x86_64-unknown-linux-gnu" ];
         };
 
-
         # setting up naersk
         naersk' = pkgs.callPackage naersk {
           cargo = rustToolchain;
@@ -34,7 +33,7 @@
           src = ./.;
           nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl ];
-          cargoBuildOptions = [ "$cargo_release" ''-j "$NIX_BUILD_CORES"'' "--message-format=$cargo_message_format" "--target=x86_64-unknown-linux-gnu" ];
+          CARGO_BUILD_TARGET = "x86_64-unknown-linux-gnu";
         };
 
         packages.dockerImage.x86_64-linux = pkgs.dockerTools.buildImage {
