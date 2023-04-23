@@ -22,9 +22,9 @@
 
         toolchain = with fenix.packages.${system};
           combine [
-            default.rustc
-            default.cargo
-            targets.x86_64-unknown-linux-musl.default.rust-std
+            minimal.rustc
+            minimal.cargo
+            targets.x86_64-unknown-linux-musl.latest.rust-std
           ];
 
         # setting up naersk
