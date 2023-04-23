@@ -30,8 +30,8 @@
 
         # setting up naersk
         naersk' = naersk.lib.${system}.override {
-          cargo = toolchain;
-          rustc = toolchain;
+          cargo = toolchain.cargo;
+          rustc = toolchain.rustc;
         };
 
       in rec {
