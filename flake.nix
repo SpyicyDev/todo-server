@@ -33,7 +33,7 @@
       in rec {
         packages.rustPackage-x86_64-linux = naersk'.buildPackage {
           src = ./.;
-          nativeBuildInputs = [ pkgs.pkg-config pkgs.openssl.dev ];
+          nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl ];
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-gnu";
         };
