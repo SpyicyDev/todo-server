@@ -18,31 +18,34 @@
           overlays = [ rust-overlay.overlays.default ];
         };
 
-        pkgs.rust-bin.beta.latest.default = pkgs.rust-bin.beta.latest.override {
-          targets = [ "x86_64-unknown-linux-gnu" ];
-        };
-
-
         # setting up naersk
         naersk' = pkgs.callPackage naersk {
           cargo = pkgs.rust-bin.beta.latest.default;
           rustc = pkgs.rust-bin.beta.latest.default;
         };
 
-      in rec {
-        packages.rustPackage.x86_64-linux = naersk'.buildPackage {
+        rustBuild = naersk'.buildPackage {
+          name = "todo-server";
+
           src = ./.;
           nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl ];
-          cargoBuildOptions = [ "$cargo_release" ''-j "$NIX_BUILD_CORES"'' "--message-format=$cargo_message_format" "--target=x86_64-unknown-linux-gnu" ];
-        };
 
-        packages.dockerImage.x86_64-linux = pkgs.dockerTools.buildImage {
+          postInstall = "cp ./ca-certificate.crt $out/ca-certificate.crt";
+        };
+ 
+        dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
-          config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
+          config = { Cmd = [ "${self.packages.x86_64-linux.rustPackage}/bin/todo-server" ]; };
         };
 
-        defaultPackage = packages.rustPackage.x86_64-linux;
+      in rec {
+        packages = {
+          rustPackage = rustBuild;
+          docker = dockerImage;
+        };
+
+        defaultPackage = rustBuild; 
 
         devShell = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [ rust-bin.beta.latest.default ];
