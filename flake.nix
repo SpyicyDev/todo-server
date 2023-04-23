@@ -7,25 +7,21 @@
     flake-utils.url = "github:numtide/flake-utils";
     naersk.url = "github:nix-community/naersk";
 
-    fenix = {
-      url = "github:nix-community/fenix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, flake-utils, naersk, fenix }:
+  outputs = { self, nixpkgs, flake-utils, naersk, rust-overlay }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = (import nixpkgs) {
           inherit system;
         };
 
-        toolchain = with fenix.packages.${system};
-          combine [
-            default.rustc
-            default.cargo
-            targets.x86_64-unknown-linux-gnu.default.rust-std
-          ];
+        toolchain = rust-bin.beta.latest.default.override {
+          extensions = [ "rust-src" ];
+          targets = [ "x86_64-unknown-linux-gnu" ];
+        };
 
         # setting up naersk
         naersk' = naersk.lib.${system}.override {
