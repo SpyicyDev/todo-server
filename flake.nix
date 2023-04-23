@@ -18,15 +18,15 @@
           overlays = [ rust-overlay.overlays.default ];
         };
 
-        pkgs.rust-bin.beta.latest.default = pkgs.rust-bin.beta.latest.override {
+        rustToolchain = pkgs.rust-bin.beta.latest.override {
           targets = [ "x86_64-unknown-linux-gnu" ];
         };
 
 
         # setting up naersk
         naersk' = pkgs.callPackage naersk {
-          cargo = pkgs.rust-bin.beta.latest.default;
-          rustc = pkgs.rust-bin.beta.latest.default;
+          cargo = toolChain;
+          rustc = ToolChain;
         };
 
       in rec {
