@@ -22,9 +22,8 @@
 
         toolchain = with fenix.packages.${system};
           combine [
-            beta.rustc
-            beta.cargo
-            targets.x86_64-unknown-linux-gnu.beta.rust-std
+            beta
+            targets.x86_64-unknown-linux-gnu.beta
           ];
 
         # setting up naersk
