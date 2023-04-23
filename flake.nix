@@ -24,7 +24,7 @@
           combine [
             minimal.rustc
             minimal.cargo
-            targets.x86_64-unknown-linux-gnu.latest.rust-std
+            targets.x86_64-unknown-linux-musl.latest.rust-std
           ];
 
         # setting up naersk
@@ -36,9 +36,11 @@
       in rec {
         packages.rustPackage-x86_64-linux = naersk'.buildPackage {
           src = ./.;
-          nativeBuildInputs = [ pkgs.pkg-config pkgs.zstd pkgs.openssl.dev ];
-          buildInputs = [ pkgs.openssl pkgs.qwqwqew ];
-          CARGO_BUILD_TARGET = "x86_64-unknown-linux-gnu";
+          doCheck = true;
+          nativeBuildInputs = [ pkgs.pkg-config pkgs.zstd pkgs.openssl.dev pkgs.pkgsStatic.stdenv.cc ];
+          buildInputs = [ pkgs.openssl ];
+          CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
+          CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
         };
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
