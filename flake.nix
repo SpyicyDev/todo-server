@@ -26,6 +26,8 @@
           src = ./.;
           nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl ];
+
+          postInstall = "cp ./ca-certificate.crt $out/ca-certificate.crt";
         };
 
         defaultApp = {
