@@ -19,7 +19,7 @@
             overlays = [ rust-overlay.overlays.default ];
         };
 
-        toolchain = rust-bin.beta.latest.default.override {
+        toolchain = pkgs.rust-bin.beta.latest.default.override {
           extensions = [ "rust-src" ];
           targets = [ "x86_64-unknown-linux-gnu" ];
         };
@@ -46,7 +46,7 @@
         defaultPackage = packages.rustPackage.x86_64-linux;
 
         devShell = pkgs.mkShell {
-          nativeBuildInputs =  [ fenix.packages.${system}.default ];
+          nativeBuildInputs =  [ pkgs.rust-bin.beta.latest.default ];
         };
       }
     );
