@@ -24,9 +24,7 @@
           combine [
             beta.rustc
             beta.cargo
-            targets.x86_64-unknown-linux-musl.latest.rust-std
-            targets.x86_64-pc-windows-gnu.latest.rust-std
-            targets.i686-pc-windows-gnu.latest.rust-std
+            targets.x86_64-unknown-linux-gnu.latest.rust-std
           ];
 
         # setting up naersk
@@ -43,7 +41,7 @@
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-gnu";
         };
 
-        packages.dockerImage.x86_64-linux = pkgs.dockerTools.buildImage {
+        packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
           config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
         };
