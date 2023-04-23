@@ -43,8 +43,6 @@
           config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
         };
 
-        defaultPackage = packages.rustPackage.x86_64-linux;
-
         devShell = pkgs.mkShell {
           nativeBuildInputs =  [ pkgs.rust-bin.beta.latest.default ];
         };
