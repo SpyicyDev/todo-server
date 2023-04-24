@@ -38,7 +38,7 @@
           src = ./.;
           doCheck = true;
           nativeBuildInputs = [ pkgs.pkg-config ];
-          buildInputs = [ pkgs.openssl ];
+          buildInputs = [ pkgs.openssl pkgs.openssl.dev ];
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
         };
 
