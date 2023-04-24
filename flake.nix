@@ -40,6 +40,7 @@
           nativeBuildInputs = [ pkgs.pkg-config pkgs.pkgsCross.musl64.stdenv.cc.cc ];
           buildInputs = [ pkgs.openssl pkgs.openssl.dev ];
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+          TARGET_CC = "x86_64-unknown-linux-musl-gcc";
         };
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
