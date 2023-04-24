@@ -37,7 +37,7 @@
         packages.rustPackage-x86_64-linux = naersk'.buildPackage {
           src = ./.;
           doCheck = true;
-          nativeBuildInputs = [ pkgs.pkg-config pkgs.stdenv.cc ];
+          nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl ];
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
         };
