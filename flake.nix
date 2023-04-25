@@ -40,6 +40,9 @@
           buildInputs = [ pkgs.openssl pkgs.openssl.dev ];
         };
 
+        
+        packages.rustPackage-x86_64 = pkgs.pkgsCross.x86_64-linux.callPackage packages.rustPackage {};
+
         packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
           config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
