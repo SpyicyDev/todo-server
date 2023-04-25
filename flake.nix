@@ -37,8 +37,8 @@
         packages.rustPackage-x86_64-linux = naersk'.buildPackage {
           src = ./.;
           doCheck = true;
-          nativeBuildInputs = [ pkgs.pkg-config ];
-          buildInputs = [ pkgs.pkgsStatic.stdenv.cc pkgs.perl ];
+          nativeBuildInputs = [ pkgs.pkg-config pkgs.pkgsStatic.stdenv.cc ];
+          buildInputs = [ pkgs.pkgsCross.musl64.openssl pkgs.pkgsCross.musl64.zlib ];
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
           CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
         };
