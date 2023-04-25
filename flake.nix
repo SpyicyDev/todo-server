@@ -15,46 +15,44 @@
 
   outputs = { self, nixpkgs, flake-utils, naersk, fenix }:
     flake-utils.lib.eachDefaultSystem (system:
-        flake-utils.lib.eachDefaultSystem (targetSystem:
-          let
-            pkgs = (import nixpkgs) {
-              inherit system;
-              localSystem = system;
-              crossSystem = targetSystem;
-            };
+      let
+        pkgs = (import nixpkgs) {
+          inherit system;
+          localSystem = system;
+          crossSystem = (import nixpkgs {}).lib.systems.examples.musl64;
+        };
 
-            toolchain = with fenix.packages.${system};
-              combine [
-                minimal.rustc
-                minimal.cargo
-                targets.x86_64-unknown-linux-musl.latest.rust-std
-              ];
+        toolchain = with fenix.packages.${system};
+          combine [
+            minimal.rustc
+            minimal.cargo
+            targets.x86_64-unknown-linux-musl.latest.rust-std
+          ];
 
-            # setting up naersk
-            naersk' = naersk.lib.${system}.override {
-              cargo = toolchain;
-              rustc = toolchain;
-            };
+        # setting up naersk
+        naersk' = naersk.lib.${system}.override {
+          cargo = toolchain;
+          rustc = toolchain;
+        };
 
-          in rec {
-            packages.rustPackage-x86_64-linux = naersk'.buildPackage {
-              src = ./.;
-              doCheck = true;
-              nativeBuildInputs = [ pkgs.pkg-config pkgs.pkgsStatic.stdenv.cc ];
-              buildInputs = [ pkgs.openssl pkgs.openssl.dev ];
-              CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
-              CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
-            };
+      in rec {
+        packages.rustPackage-x86_64-linux = naersk'.buildPackage {
+          src = ./.;
+          doCheck = true;
+          nativeBuildInputs = [ pkgs.pkg-config pkgs.pkgsStatic.stdenv.cc ];
+          buildInputs = [ pkgs.openssl pkgs.openssl.dev ];
+          CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+          CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
+        };
 
-            packages.dockerImage = pkgs.dockerTools.buildImage {
-              name = "todo-server";
-              config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
-            };
+        packages.dockerImage = pkgs.dockerTools.buildImage {
+          name = "todo-server";
+          config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
+        };
 
-            devShell = pkgs.mkShell {
-              nativeBuildInputs =  [ fenix.packages.${system}.default ];
-            };
-          }
-        )
+        devShell = pkgs.mkShell {
+          nativeBuildInputs =  [ fenix.packages.${system}.default ];
+        };
+      }
     );
 }
