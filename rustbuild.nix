@@ -1,4 +1,4 @@
-{naesrk', pkgs }: naersk'.buildPackage {
+{naersk', pkgs }: naersk'.buildPackage {
   src = ./.;
   doCheck = true;
   nativeBuildInputs = [ pkgs.pkg-config pkgs.pkgsStatic.stdenv.cc ];
