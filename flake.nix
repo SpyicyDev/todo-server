@@ -36,12 +36,9 @@
         packages.rustPackage = naersk'.buildPackage {
           src = ./.;
           doCheck = true;
-          nativeBuildInputs = [ pkgs.pkg-config pkgs.pkgsCross.musl64.stdenv.cc.cc ];
+          nativeBuildInputs = [ pkgs.pkg-config ];
           buildInputs = [ pkgs.openssl pkgs.openssl.dev ];
         };
-
-        
-        packages.rustPackage-x86_64-linux = pkgs.pkgsCross.musl64.callPackage packages.rustPackage {};
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
