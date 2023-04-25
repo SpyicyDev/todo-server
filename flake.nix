@@ -50,9 +50,9 @@
           config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
         };
 
-        devShell = pkgs.mkShell {
-          nativeBuildInputs =  [ fenix.packages.${system}.default ];
-        };
+        #devShell = pkgs.mkShell {
+        #  nativeBuildInputs =  [ fenix.packages.${system}.default ];
+        #};
       }
     );
 }
