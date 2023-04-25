@@ -14,13 +14,13 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, naersk, fenix }:
-    flake-utils.lib.eachDefaultSystem (system:
+    flake-utils.lib.eachDefaultSystem (systems:
       let
         pkgs = (import nixpkgs) {
-          inherit system;
+          inherit systems;
         };
 
-        toolchain = with fenix.packages.${system};
+        toolchain = with fenix.packages.${systems};
           combine [
             minimal.rustc
             minimal.cargo
@@ -28,7 +28,7 @@
           ];
 
         # setting up naersk
-        naersk' = naersk.lib.${system}.override {
+        naersk' = naersk.lib.${systems}.override {
           cargo = toolchain;
           rustc = toolchain;
         };
@@ -37,8 +37,8 @@
         packages.rustPackage-x86_64-linux =
         let
             pkgss = (import nixpkgs) {
-                inherit system;
-                localSystem = system;
+                inherit systems;
+                localSystem = systems;
                 crossSystem = "x86_64-unknown-linux-musl";
             };
         in
@@ -53,7 +53,7 @@
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
-          config = { Cmd = [ "${self.packages."${system}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
+          config = { Cmd = [ "${self.packages."${systems}".rustPackage.x86_64-linux}/bin/todo-server" ]; };
         };
 
         #devShell = pkgs.mkShell {
