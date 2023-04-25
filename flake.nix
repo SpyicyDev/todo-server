@@ -41,7 +41,7 @@
         };
 
         
-        packages.rustPackage-x86_64-linux = pkgs.pkgsCross.x86_64-unknown-linux-gnu.callPackage packages.rustPackage {};
+        packages.rustPackage-x86_64-linux = pkgs.pkgsCross.musl64.callPackage packages.rustPackage {};
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
