@@ -34,23 +34,22 @@
         };
 
       in rec {
-        packages.rustPackage-x86_64-linux = flake-utils.lib.eachDefaultSystem (targetSystem:
-            let
-              pkgss = (import nixpkgs) {
+        packages.rustPackage-x86_64-linux =
+        let
+            pkgss = (import nixpkgs) {
                 inherit system;
                 localSystem = system;
-                crossSystem = targetSystem;
-              };
-            in
-                naersk'.buildPackage {
-                  src = ./.;
-                  doCheck = true;
-                  nativeBuildInputs = [ pkgss.pkg-config pkgss.pkgsStatic.stdenv.cc ];
-                  buildInputs = [ pkgss.openssl pkgss.openssl.dev ];
-                  CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
-                  CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
-                }
-        );
+                crossSystem = "x86_64-unknown-linux-musl";
+            };
+        in
+            naersk'.buildPackage {
+              src = ./.;
+              doCheck = true;
+              nativeBuildInputs = [ pkgss.pkg-config pkgss.pkgsStatic.stdenv.cc ];
+              buildInputs = [ pkgss.openssl pkgss.openssl.dev ];
+              CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+              CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
+            };
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
