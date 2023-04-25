@@ -39,7 +39,7 @@
             pkgss = (import nixpkgs) {
                 inherit systems;
                 localSystem = systems;
-                crossSystem = "x86_64-unknown-linux-musl";
+                crossSystem = "x86_64-linux";
             };
         in
             naersk'.buildPackage {
