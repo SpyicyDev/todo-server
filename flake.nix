@@ -50,7 +50,7 @@
               CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
             };
 
-        packages.rustPackage-test = pkgs.pkgsCross.musl64.callPackage ./rustbuild.nix { naersk = naersk'; pkgs = pkgs; };
+        packages.rustPackage-test = pkgs.pkgsCross.musl64.callPackage ./rustbuild.nix { naersk' = naersk'; pkgs = pkgs; };
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
