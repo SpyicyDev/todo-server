@@ -34,23 +34,14 @@
         };
 
       in rec {
-        packages.rustPackage-x86_64-linux =
-        let
-            pkgsCross = (import nixpkgs) {
-                inherit system;
-                crossSystem = "x86_64-linux";
-            };
-        in
-            naersk'.buildPackage {
-              src = ./.;
-              doCheck = true;
-              nativeBuildInputs = [ pkgsCross.pkg-config pkgsCross.pkgsStatic.stdenv.cc ];
-              buildInputs = [ pkgsCross.openssl pkgsCross.openssl.dev ];
-              CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
-              CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
-            };
-
-        packages.rustPackage-test = pkgs.pkgsCross.musl64.callPackage ./rustbuild.nix { naersk' = naersk'; pkgs = pkgs; };
+        packages.rustPackage-x86_64-linux = naersk'.buildPackage {
+          src = ./.;
+          doCheck = true;
+          nativeBuildInputs = [ pkgs.pkg-config ];
+          buildInputs = [ pkgs.pkgsStatic.stdenv.cc pkgs.perl ];
+          CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+          CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
+        };
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
           name = "todo-server";
