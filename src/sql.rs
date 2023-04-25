@@ -1,5 +1,9 @@
-use openssl::ssl::{SslConnector, SslMethod};
-use postgres_openssl::MakeTlsConnector;
+use std::fs::File;
+// use openssl::ssl::SslMethod;
+//use postgres_openssl::MakeTlsConnector;
+use rustls_pemfile::certs;
+use rustls::{Certificate};
+use std::io::BufReader;
 
 use serde::{Serialize, Deserialize};
 
@@ -62,12 +66,24 @@ pub async fn inc_count() {
 }
 
 async fn prep_sql() -> tokio_postgres::Client {
+    let mut root_store = rustls::RootCertStore::empty();
+    let mut f = File::open("./ca-certificate.pem").unwrap();
+    let mut f = BufReader::new(f);
+    certs(&mut f).unwrap().iter().for_each(|cert| root_store.add(&Certificate(cert.clone())).unwrap());
+    let config = rustls::ClientConfig::builder()
+        .with_safe_defaults()
+        .with_root_certificates(root_store)
+        .with_no_client_auth();
+    let tls = tokio_postgres_rustls::MakeRustlsConnect::new(config);
+
+    /*
     let mut builder = SslConnector::builder(SslMethod::tls()).unwrap();
-    builder.set_ca_file("../ca-certificate.crt").unwrap();
+    builder.set_ca_file("./ca-certificate.crt").unwrap();
     let connector = MakeTlsConnector::new(builder.build());
+     */
 
     let (client, connection) =
-        tokio_postgres::connect("postgresql://doadmin:AVNS_AphIofhrOO6vcAN8gCP@db-postgresql-nyc1-78249-do-user-7865624-0.b.db.ondigitalocean.com:25060/defaultdb?sslmode=require", connector).await.unwrap();
+        tokio_postgres::connect("postgresql://doadmin:AVNS_AphIofhrOO6vcAN8gCP@db-postgresql-nyc1-78249-do-user-7865624-0.b.db.ondigitalocean.com:25060/defaultdb?sslmode=require", tls).await.unwrap();
 
     // The connection object performs the actual communication with the database,
     // so spawn it off to run on its own.
