@@ -47,9 +47,9 @@
         packages.x86_64-linux = naersk'.buildPackage {
             src = ./.;
             CARGO_BUILD_TARGET = target;
-            CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER =
+            CARGO_TARGET_x86_64_UNKNOWN_LINUX_MUSL_LINKER =
             let
-                inherit (pkgs.pkgsCross.aarch64-multiplatform.stdenv) cc;
+                inherit (pkgs.pkgsCross.musl.stdenv) cc;
             in
                 "${cc}/bin/${cc.targetPrefix}cc";
         };
