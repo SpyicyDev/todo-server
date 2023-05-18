@@ -23,6 +23,7 @@
             crossSystem = {
                 config = target;
             };
+            currentSystem = system;
         };
 
         toolchain = with fenix.packages.${system};
