@@ -44,7 +44,7 @@
             src = ./.;
         };
 
-        packages.x86_64-linux = cross-pkgs.mkDerivation {
+        packages.linux = cross-pkgs.mkDerivation {
             src = ./.;
             buildInputs = [ toolchain ];
             buildPhase = ''
