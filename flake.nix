@@ -21,7 +21,7 @@
 
         cross-pkgs = (import nixpkgs) {
             crossSystem = {
-                config = target;
+                config = "x86_64-unknown-linux-musl";
             };
         };
 
