@@ -16,7 +16,9 @@
   outputs = { self, nixpkgs, flake-utils, naersk, fenix }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = (import nixpkgs) {
+              inherit system;
+        };
         target = "x86_64-unknown-linux-musl";
 
         cross-pkgs = (import nixpkgs) {
