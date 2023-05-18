@@ -21,7 +21,7 @@
 
         cross-pkgs = (import nixpkgs) {
             crossSystem = {
-                config = "x86_64-unknown-linux-musl";
+                config = target;
             };
         };
 
@@ -44,9 +44,13 @@
             src = ./.;
         };
 
-        packages.x86_64-linux = naersk'.buildPackage {
+        packages.x86_64-linux = cross-pkgs.mkDerivation {
             src = ./.;
-            buildInputs = [ cross-pkgs.stdenv ];
+            buildInputs = [ toolchain ];
+            buildPhase = ''
+                cargo build --release --target ${target}
+                '';
+            installPhase = "";
         };
 
         defaultPackage = packages.rustPackage;
