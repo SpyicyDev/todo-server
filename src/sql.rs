@@ -2,7 +2,7 @@ use std::fs::File;
 // use openssl::ssl::SslMethod;
 //use postgres_openssl::MakeTlsConnector;
 use rustls_pemfile::certs;
-use rustls::{Certificate};
+use rustls::Certificate;
 use std::io::BufReader;
 
 use serde::{Serialize, Deserialize};
