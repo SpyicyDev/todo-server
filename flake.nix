@@ -44,15 +44,7 @@
             src = ./.;
         };
 
-        packages.x86_64-linux = naersk'.buildPackage {
-            src = ./.;
-            CARGO_BUILD_TARGET = target;
-            CARGO_TARGET_X86_64_UNKNOWN_LINUX_MUSL_LINKER =
-            let
-                inherit (pkgs.pkgsCross.musl64.stdenv) cc;
-            in
-                "${cc}/bin/${cc.targetPrefix}cc";
-        };
+        packages.x86_64-linux = cross-pkgs.callPackage self.packages.x86_64-linux.rustPackage;
 
         defaultPackage = packages.rustPackage;
 
