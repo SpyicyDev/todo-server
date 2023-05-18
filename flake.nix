@@ -23,7 +23,6 @@
             crossSystem = {
                 config = target;
             };
-            currentSystem = system;
         };
 
         toolchain = with fenix.packages.${system};
@@ -47,7 +46,7 @@
 
         packages.linux = cross-pkgs.mkDerivation {
             src = ./.;
-            buildInputs = [ toolchain ];
+            # buildInputs = [ toolchain ];
             buildPhase = ''
                 cargo build --release --target ${target}
                 '';
