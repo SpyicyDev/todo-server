@@ -49,7 +49,7 @@
             CARGO_BUILD_TARGET = target;
             CARGO_TARGET_x86_64_UNKNOWN_LINUX_MUSL_LINKER =
             let
-                inherit (pkgs.pkgsCross.musl.stdenv) cc;
+                inherit (pkgs.pkgsCross.musl64.stdenv) cc;
             in
                 "${cc}/bin/${cc.targetPrefix}cc";
         };
