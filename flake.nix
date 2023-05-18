@@ -44,7 +44,10 @@
             src = ./.;
         };
 
-        packages.x86_64-linux = cross-pkgs.callPackage self.packages.x86_64-linux.rustPackage;
+        packages.x86_64-linux = naersk'.buildPackage {
+            src = ./.;
+            buildInputs = [ cross-pkgs.stdenv ];
+        };
 
         defaultPackage = packages.rustPackage;
 
