@@ -44,6 +44,11 @@
 
         packages.rustPackage = naersk'.buildPackage {
             src = ./.;
+            buildInputs = [ pkgs.pkgsCross.musl64.stdenv ];
+            shellHook = ''
+            source $stdenv/setup
+            '';
+            CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
         };
 
         packages.test = pkgs.pkgsCross.musl64.stdenv.mkDerivation {
