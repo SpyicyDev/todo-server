@@ -50,8 +50,9 @@
             name = "linux_cc_test";
             src = ./.;
             buildInputs = [ toolchain ];
+            shellHook = "source ${toolchain}/bin/";
             buildPhase = ''
-            ${toolchain}/bin/cargo build --target ${target} --release
+            cargo build --target ${target} --release
             '';
         };
 
