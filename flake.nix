@@ -51,7 +51,7 @@
             src = ./.;
             buildInputs = [ toolchain ];
             shellHook = ''
-            source ${toolchain}/bin/
+            export PATH="$PATH:${toolchain}/bin/"
             '';
             buildPhase = ''
             cargo build --target ${target} --release
