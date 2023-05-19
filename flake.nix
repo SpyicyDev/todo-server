@@ -49,7 +49,7 @@
             source ${pkgs.pkgsCross.musl64.stdenv}/setup
             '';
             CARGO_BUILD_TARGET = target;
-            TARGET_CC = "x86_64-linux-musl-gcc";
+            TARGET_CC = "$CC";
         };
 
         packages.test = pkgs.pkgsCross.musl64.stdenv.mkDerivation {
