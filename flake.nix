@@ -51,7 +51,7 @@
             src = ./.;
             buildInputs = [ toolchain ];
             buildPhase = ''
-            cargo build --target ${target} --release
+            ${toolchain}/bin/cargo build --target ${target} --release
             '';
         };
 
