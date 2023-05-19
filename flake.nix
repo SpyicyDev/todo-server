@@ -44,11 +44,11 @@
 
         packages.rustPackage = naersk'.buildPackage {
             src = ./.;
-            buildInputs = [ pkgs.pkgsCross.musl64.stdenv ];
+            buildInputs = [  ];
             shellHook = ''
             source ${pkgs.pkgsCross.musl64.stdenv}/setup
             '';
-            CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
+            CARGO_BUILD_TARGET = target;
             TARGET_CC = "x86_64-linux-musl-gcc";
         };
 
