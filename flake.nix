@@ -46,7 +46,7 @@
             src = ./.;
         };
 
-        packages.linux = cross.mkDerivation {
+        packages.linux = cross.stdenv.mkDerivation {
             src = ./.;
             # buildInputs = [ toolchain ];
             buildPhase = ''
