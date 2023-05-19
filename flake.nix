@@ -46,6 +46,15 @@
             src = ./.;
         };
 
+        packages.test = cross.stdenv.mkDerivation {
+            name = "linux_cc_test";
+            src = ./.;
+            buildInputs = [ cross.zlib toolchain ];
+            buildPhase = ''
+            cargo build --target ${target} --release
+            '';
+        }
+
         defaultPackage = packages.rustPackage;
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
