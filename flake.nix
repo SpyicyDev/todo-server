@@ -49,7 +49,7 @@
         packages.test = pkgs.pkgsCross.musl64.stdenv.mkDerivation {
             name = "linux_cc_test";
             src = ./.;
-            buildInputs = [ cross.zlib toolchain ];
+            buildInputs = [ toolchain ];
             buildPhase = ''
             cargo build --target ${target} --release
             '';
