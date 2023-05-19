@@ -50,7 +50,7 @@
             name = "linux_cc_test";
             src = ./.;
             buildInputs = [ toolchain ];
-            shellHook = ''
+            configurePhase = ''
             export PATH="$PATH:${toolchain}/bin/"
             '';
             buildPhase = ''
