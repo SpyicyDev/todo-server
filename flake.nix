@@ -53,7 +53,7 @@
             buildPhase = ''
             cargo build --target ${target} --release
             '';
-        }
+        };
 
         defaultPackage = packages.rustPackage;
 
