@@ -46,7 +46,7 @@
             src = ./.;
             buildInputs = [ pkgs.pkgsCross.musl64.stdenv ];
             shellHook = ''
-            source $stdenv/setup
+            source ${stdenv}/setup
             '';
             CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
         };
