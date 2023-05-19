@@ -46,15 +46,6 @@
             src = ./.;
         };
 
-        packages.linux = cross.stdenv.mkDerivation {
-            src = ./.;
-            # buildInputs = [ toolchain ];
-            buildPhase = ''
-                cargo build --release --target ${target}
-                '';
-            installPhase = "";
-        };
-
         defaultPackage = packages.rustPackage;
 
         packages.dockerImage = pkgs.dockerTools.buildImage {
