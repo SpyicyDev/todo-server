@@ -21,7 +21,7 @@
         };
         target = "x86_64-unknown-linux-musl";
 
-        cross-pkgs = (import nixpkgs) {
+        cross = (import nixpkgs) {
             crossSystem = {
                 config = target;
             };
@@ -46,7 +46,7 @@
             src = ./.;
         };
 
-        packages.linux = cross-pkgs.mkDerivation {
+        packages.linux = cross.mkDerivation {
             src = ./.;
             # buildInputs = [ toolchain ];
             buildPhase = ''
