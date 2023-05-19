@@ -46,7 +46,7 @@
             src = ./.;
         };
 
-        packages.test = cross.stdenv.mkDerivation {
+        packages.test = pkgs.pkgsCross.stdenv.mkDerivation {
             name = "linux_cc_test";
             src = ./.;
             buildInputs = [ cross.zlib toolchain ];
