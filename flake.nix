@@ -44,7 +44,7 @@
 
         packages.rustPackage = naersk'.buildPackage {
             src = ./.;
-            buildInputs = [ pkgs.pkgsCross.musl64.stdenv.cc.cc ];
+            buildInputs = [ pkgs.pkgsCross.musl64.stdenv.cc.cc pkgs.pkgsCross.musl64.zlib ];
             CARGO_BUILD_TARGET = target;
             TARGET_CC = "${pkgs.pkgsCross.musl64.stdenv.cc.cc}/bin/x86_64-unknown-linux-musl-gcc";
         };
