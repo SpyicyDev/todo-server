@@ -46,7 +46,7 @@
             src = ./.;
             buildInputs = [ pkgs.pkgsCross.musl64.stdenv.cc.cc ];
             CARGO_BUILD_TARGET = target;
-            TARGET_CC = "${pkgs.pkgsCross.musl64.stdenv.cc.cc}/bin/x86_64-linux-musl-gcc";
+            TARGET_CC = "${pkgs.pkgsCross.musl64.stdenv.cc.cc}/bin/x86_64-unknown-linux-musl-gcc";
         };
 
         packages.test = pkgs.pkgsCross.musl64.stdenv.mkDerivation {
