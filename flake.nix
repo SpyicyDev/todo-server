@@ -44,12 +44,9 @@
 
         packages.rustPackage = naersk'.buildPackage {
             src = ./.;
-            buildInputs = [  ];
-            shellHook = ''
-            source ${pkgs.pkgsCross.musl64.stdenv}/setup
-            '';
+            buildInputs = [ pkgs.pkgsCross.musl64.stdenv.cc.cc ];
             CARGO_BUILD_TARGET = target;
-            TARGET_CC = "$CC";
+            TARGET_CC = "${pkgs.pkgsCross.musl64.stdenv.cc.cc}/bin/x86_64-linux-musl-gcc";
         };
 
         packages.test = pkgs.pkgsCross.musl64.stdenv.mkDerivation {
