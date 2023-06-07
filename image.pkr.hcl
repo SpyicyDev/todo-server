@@ -11,9 +11,21 @@ variables {
   bind_port = "80"
 }
 
-source "docker" "ubuntu" {
+source "docker" "amd64" {
   image  = "ubuntu:focal"
   commit = true
+  platform = "amd64"
+  changes = [
+    "ENV BIND_PORT=${var.bind_port}",
+    "EXPOSE $BIND_PORT",
+    "ENTRYPOINT /tmp/todo-server"
+  ]
+}
+
+source "docker" "arm64" {
+  image  = "ubuntu:focal"
+  commit = true
+  platform = "arm64"
   changes = [
     "ENV BIND_PORT=${var.bind_port}",
     "EXPOSE $BIND_PORT",
@@ -24,7 +36,8 @@ source "docker" "ubuntu" {
 build {
   name = "todo-server"
   sources = [
-    "source.docker.ubuntu"
+    "source.docker.amd64",
+    "source.docker.arm64"
   ]
   provisioner "file" {
     source = "todo-server"
