@@ -32,8 +32,6 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: todo-server
-    - name: Setup Packer
-      uses: hashicorp/setup-packer@main
     - name: Packer Init 
       run: packer init .
     - name: Packer Run
