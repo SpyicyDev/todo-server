@@ -54,7 +54,7 @@ build {
   post-processors {
     post-processor "docker-tag" {
       repository = "ghcr.io/spyicydev/todo-server"
-      tags = ["latest"]
+      tags = ["${source.name}"]
     }
   }
 }
