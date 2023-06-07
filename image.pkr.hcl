@@ -33,23 +33,11 @@ source "docker" "arm64" {
   ]
 }
 
-source "docker" "arm64_mac" {
-  image  = "ubuntu:focal"
-  commit = true
-  platform = "darwin/arm64"
-  changes = [
-    "ENV BIND_PORT=${var.bind_port}",
-    "EXPOSE $BIND_PORT",
-    "ENTRYPOINT /tmp/todo-server"
-  ]
-}
-
 build {
   name = "todo-server"
   sources = [
     "source.docker.amd64",
-    "source.docker.arm64",
-    "source.docker.arm64_mac"
+    "source.docker.arm64"
   ]
   provisioner "file" {
     source = "todo-server"
