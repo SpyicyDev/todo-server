@@ -1,0 +1,48 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Compile Rust Binary
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build bin
+      run: cargo build --release
+    - name: Upload bin artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: todo-server
+        path: target/release/todo-server
+  packer:
+    runs-on: ubuntu-latest
+    name: Package Into Docker Image
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download binary artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: todo-server
+    - name: Setup Packer
+      uses: hashicorp/setup-packer@main
+    - name: Packer Init 
+      run: packer init .
+    - name: Packer Run
+      run: packer build image.pkr.hcl
+    - name: login to ghcr.io
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Push to ghcr.io
+      run: docker push ghcr.io/spyicydev/todo-server:latest
