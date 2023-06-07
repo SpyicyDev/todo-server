@@ -1,6 +1,7 @@
 mod sql;
 
 use crate::sql::*;
+use std::env;
 
 use actix_web::*;
 
@@ -61,7 +62,7 @@ async fn main() -> std::io::Result<()> {
             .service(get_count_handler)
             .service(inc_count_handler)
     })
-    .bind(("0.0.0.0", 8088))?
+    .bind(("0.0.0.0", env::var("BIND_PORT").unwrap().parse().unwrap()))?
     .run()
     .await
 }
