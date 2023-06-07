@@ -40,6 +40,8 @@ jobs:
       run: packer init .
     - name: Packer Run
       run: packer build image.pkr.hcl
+    - name: output inspect
+      run: docker inspect ghcr.io/spyicydev/todo-server:latest
     - name: login to ghcr.io
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
       with:
