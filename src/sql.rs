@@ -1,16 +1,16 @@
 use std::fs::File;
 // use openssl::ssl::SslMethod;
 //use postgres_openssl::MakeTlsConnector;
-use rustls_pemfile::certs;
 use rustls::Certificate;
+use rustls_pemfile::certs;
 use std::io::BufReader;
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct TodoItem {
     pub todo_id: i32,
-    pub todo_text: String
+    pub todo_text: String,
 }
 
 pub async fn get_all_tasks() -> Option<Vec<TodoItem>> {
@@ -20,13 +20,14 @@ pub async fn get_all_tasks() -> Option<Vec<TodoItem>> {
 
     let rows = client
         .query(&get, &[])
-        .await.unwrap()
-        .iter().map(|row| {
-        TodoItem {
+        .await
+        .unwrap()
+        .iter()
+        .map(|row| TodoItem {
             todo_id: row.get(0),
             todo_text: row.get(1),
-        }
-    }).collect::<Vec<_>>();
+        })
+        .collect::<Vec<_>>();
 
     Option::from(rows)
 }
@@ -34,17 +35,29 @@ pub async fn get_all_tasks() -> Option<Vec<TodoItem>> {
 pub async fn add_task(id: i32, text: &String) {
     let client = prep_sql().await;
 
-    let post = client.prepare("INSERT INTO todos (todo_id, todo_text) VALUES ($1, $2)").await.unwrap();
+    let post = client
+        .prepare("INSERT INTO todos (todo_id, todo_text) VALUES ($1, $2)")
+        .await
+        .unwrap();
 
-    client.execute(&post, &[&id, text]).await.expect("Unable to POST new data into todos table!");
+    client
+        .execute(&post, &[&id, text])
+        .await
+        .expect("Unable to POST new data into todos table!");
 }
 
 pub async fn delete_task(id: i32) {
     let client = prep_sql().await;
 
-    let delete = client.prepare("DELETE FROM todos WHERE todo_id = $1").await.unwrap();
+    let delete = client
+        .prepare("DELETE FROM todos WHERE todo_id = $1")
+        .await
+        .unwrap();
 
-    client.execute(&delete, &[&id]).await.expect("Unable to DELETE data from todos table!");
+    client
+        .execute(&delete, &[&id])
+        .await
+        .expect("Unable to DELETE data from todos table!");
 }
 
 pub async fn get_count() -> i32 {
@@ -60,16 +73,25 @@ pub async fn get_count() -> i32 {
 pub async fn inc_count() {
     let client = prep_sql().await;
 
-    let inc_id = client.prepare("UPDATE id SET id = id + 1 WHERE true").await.unwrap();
+    let inc_id = client
+        .prepare("UPDATE id SET id = id + 1 WHERE true")
+        .await
+        .unwrap();
 
-    client.execute(&inc_id, &[]).await.expect("Unable to increment ID!");
+    client
+        .execute(&inc_id, &[])
+        .await
+        .expect("Unable to increment ID!");
 }
 
 async fn prep_sql() -> tokio_postgres::Client {
     let mut root_store = rustls::RootCertStore::empty();
-    let mut f = File::open("./ca-certificate.pem").unwrap();
+    let f = File::open("./ca-certificate.pem").unwrap();
     let mut f = BufReader::new(f);
-    certs(&mut f).unwrap().iter().for_each(|cert| root_store.add(&Certificate(cert.clone())).unwrap());
+    certs(&mut f)
+        .unwrap()
+        .iter()
+        .for_each(|cert| root_store.add(&Certificate(cert.clone())).unwrap());
     let config = rustls::ClientConfig::builder()
         .with_safe_defaults()
         .with_root_certificates(root_store)
