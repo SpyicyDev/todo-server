@@ -51,7 +51,6 @@ jobs:
     - name: Push to ghcr.io(arm64)
       run: docker push ghcr.io/spyicydev/todo-server:arm64
     - name: Create merged manifest
-      run: docker manifest create ghcr.io/spyicydev/todo-server:latest \
-        --amend ghcr.io/spyicydev/todo-server:amd64 \
-        --amend ghcr.io/spyicydev/todo-server:arm64
-
+      run: docker manifest create ghcr.io/spyicydev/todo-server:latest ghcr.io/spyicydev/todo-server:amd64 ghcr.io/spyicydev/todo-server:arm64
+    - name: Push merged manifest
+      run: docker manifest push ghcr.io/spyicydev/todo-server:latest
