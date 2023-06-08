@@ -51,11 +51,9 @@ build {
     inline = ["chmod +x /tmp/todo-server"]
   }
 
-  post-processors {
-    post-processor "docker-tag" {
-      repository = "ghcr.io/spyicydev/todo-server"
-      tags = ["latest"]
-    }
+  post-processor "docker-tag" {
+    repository = "ghcr.io/spyicydev/todo-server"
+    tags = ["${source.name}"]
   }
 }
 
