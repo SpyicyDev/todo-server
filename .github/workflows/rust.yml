@@ -75,7 +75,7 @@ jobs:
     - name: Packer Init 
       run: packer init .
     - name: Packer Run
-      run: packer build -var platform=linux/${{matrix.name-suffix}} -var path=todo-server-${{matrix.name-suffix}} image.pkr.hcl
+      run: packer build -var platform="linux/${{matrix.name-suffix}}" -var path="todo-server-${{matrix.name-suffix}}" image.pkr.hcl
     - name: Push to ghcr.io
       run: docker push ghcr.io/spyicydev/todo-server:${{matrix.name-suffix}}
   manifest:
