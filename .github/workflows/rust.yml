@@ -31,8 +31,10 @@ jobs:
         toolchain: nightly
     - name: Install cargo-binstall
       run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+      if: ${{matrix.cross == true}}
     - name: Install cross-rs
-      run: cargo binstall cross
+      run: cargo binstall --no-confirm cross
+      if: ${{matrix.cross == true}}
     - name: Compile binary
       run: cargo build --release --target=${{matrix.target}}
       if: ${{matrix.cross == false}}
