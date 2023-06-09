@@ -17,11 +17,11 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             cross: false
             name-suffix: amd64
-            bin-path: /target/release/todo-server
+            bin-path: target/release/todo-server
           - target: aarch64-unknown-linux-gnu
             cross: true
             name-suffix: arm64
-            bin-path: /target/aarch64-unknown-linux-gnu/release/todo-server
+            bin-path: target/aarch64-unknown-linux-gnu/release/todo-server
     runs-on: ubuntu-latest
     name: Compile Rust Binary
     steps:
