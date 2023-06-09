@@ -15,7 +15,7 @@ variables {
 source "docker" "image" {
   image  = "ubuntu:focal"
   commit = true
-  platform = var.platform
+  platform = "linux/${var.platform}"
   changes = [
     "ENV BIND_PORT=${var.bind_port}",
     "EXPOSE $BIND_PORT",
