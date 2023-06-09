@@ -10,20 +10,25 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        include:
-          - target: x86_64-unknown-linux-gnu
-            cross: false
-            name-suffix: amd64
-            bin-path: target/x86_64-unknown-linux-gnu/release/todo-server
-          - target: aarch64-unknown-linux-gnu
-            cross: true
-            name-suffix: arm64
-            bin-path: target/aarch64-unknown-linux-gnu/release/todo-server
+  build-x86:
     runs-on: ubuntu-latest
-    name: Compile Rust Binary
+    name: Compile Rust Binary(amd64)
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+    - name: Compile binary(amd64)
+      run: cargo build --release --target=x86_64-unknown-linux-gnu
+    - name: Upload bin artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: todo-server-amd64
+        path: target/x86_64-unknown-linux-gnu/release/todo-server
+
+  build-arm:
+    runs-on: ubuntu-latest
+    name: Compile Rust Binary(arm64)
     steps:
     - uses: actions/checkout@v3
     - uses: actions-rs/toolchain@v1
@@ -31,37 +36,26 @@ jobs:
         toolchain: nightly
     - name: Install cargo-binstall
       run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-      if: ${{matrix.cross == true}}
     - name: Install cross-rs
       run: cargo binstall --no-confirm cross
-      if: ${{matrix.cross == true}}
-    - name: Compile binary(amd64)
-      run: cargo build --release --target=${{matrix.target}}
-      if: ${{matrix.cross == false}}
     - name: Compile binary(arm64)
-      run: cross build --release --target=${{matrix.target}}
-      if: ${{matrix.cross == true}}
+      run: cross build --release --target=aarch64-unknown-linux-gnu
     - name: Upload bin artifact
       uses: actions/upload-artifact@v3
       with:
-        name: todo-server-${{matrix.name-suffix}}
-        path: ${{matrix.bin-path}}
+        name: todo-server-arm64
+        path: target/aarch64-unknown-linux-gnu/release/todo-server
 
-  packer:
-    strategy:
-      matrix:
-        include:
-          - name-suffix: amd64
-          - name-suffix: arm64
+  packer-x86:
     runs-on: ubuntu-latest
-    name: Package Into Docker Image
-    needs: build
+    name: Package Into Docker Image(amd64)
+    needs: build-x86
     steps:
     - uses: actions/checkout@v3
     - name: Download binary artifact
       uses: actions/download-artifact@v3
       with:
-        name: todo-server-${{matrix.name-suffix}}
+        name: todo-server-amd64
     - name: login to ghcr.io
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
       with:
@@ -75,13 +69,43 @@ jobs:
     - name: Packer Init 
       run: packer init .
     - name: Packer Run
-      run: packer build -var platform="${{matrix.name-suffix}}" image.pkr.hcl
+      run: packer build -var platform="amd64" image.pkr.hcl
     - name: Push to ghcr.io
-      run: docker push ghcr.io/spyicydev/todo-server:${{matrix.name-suffix}}
+      run: docker push ghcr.io/spyicydev/todo-server:amd64
+
+  packer-arm:
+    runs-on: ubuntu-latest
+    name: Package Into Docker Image(arm64)
+    needs: build-arm
+    steps:
+    - uses: actions/checkout@v3
+    - name: Download binary artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: todo-server-arm64
+    - name: login to ghcr.io
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Setup QEMU
+      uses: docker/setup-qemu-action@v2
+    - name: Setup Buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Packer Init 
+      run: packer init .
+    - name: Packer Run
+      run: packer build -var platform="arm64" image.pkr.hcl
+    - name: Push to ghcr.io
+      run: docker push ghcr.io/spyicydev/todo-server:arm64
+
   manifest:
     runs-on: ubuntu-latest
     name: Push Manifest to ghcr.io
-    needs: packer
+    needs: 
+    - packer-x86
+    - packer-arm
     steps:
     - name: login to ghcr.io
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
