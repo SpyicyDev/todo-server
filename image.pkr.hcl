@@ -10,7 +10,6 @@ packer {
 variables {
   bind_port = "80"
   platform = ""
-  path = ""
 }
 
 source "docker" "image" {
@@ -30,7 +29,7 @@ build {
     "source.docker.image"
   ]
   provisioner "file" {
-    source = var.path
+    source = "todo-server"
     destination = "/tmp/todo-server"
   }
   provisioner "file" {
