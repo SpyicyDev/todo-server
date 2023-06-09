@@ -37,7 +37,7 @@ jobs:
     - name: Upload bin artifact
       uses: actions/upload-artifact@v3
       with:
-        name: todo-server-${{name-suffix}}
+        name: todo-server-${{matrix.name-suffix}}
         path: ${{matrix.bin-path}}
 
   packer:
