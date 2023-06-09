@@ -83,6 +83,12 @@ jobs:
     name: Push Manifest to ghcr.io
     needs: packer
     steps:
+    - name: login to ghcr.io
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     - name: Create merged manifest
       run: docker manifest create ghcr.io/spyicydev/todo-server:latest ghcr.io/spyicydev/todo-server:amd64 ghcr.io/spyicydev/todo-server:arm64
     - name: Push merged manifest
