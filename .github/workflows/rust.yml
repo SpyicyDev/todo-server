@@ -11,18 +11,41 @@ env:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            cross: false
+            name-suffix: amd64
+            bin-path: /target/release/todo-server
+          - target: aarch64-unknown-linux-gnu
+            cross: true
+            name-suffix: arm64
+            bin-path: /target/aarch64-unknown-linux-gnu/release/todo-server
     runs-on: ubuntu-latest
     name: Compile Rust Binary
     steps:
     - uses: actions/checkout@v3
-    - name: Build bin
-      run: cargo build --release
+    - uses: actions-rs/toolchain@v1
+      with:
+        toolchain: nightly
+    - uses: actions-rs/cargo@v1
+      with:
+        command: build
+        args: --release --all-features --target=${{matrix.target}}
+        use-cross: ${{matrix.cross}}
     - name: Upload bin artifact
       uses: actions/upload-artifact@v3
       with:
-        name: todo-server
-        path: target/release/todo-server
+        name: todo-server-${{name-suffix}}
+        path: ${{matrix.bin-path}}
+
   packer:
+    strategy:
+      matrix:
+        include:
+          - name-suffix: amd64
+          - name-suffix: arm64
     runs-on: ubuntu-latest
     name: Package Into Docker Image
     needs: build
@@ -31,7 +54,7 @@ jobs:
     - name: Download binary artifact
       uses: actions/download-artifact@v3
       with:
-        name: todo-server
+        name: todo-server-${{matrix.name-suffix}}
     - name: login to ghcr.io
       uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
       with:
@@ -45,11 +68,14 @@ jobs:
     - name: Packer Init 
       run: packer init .
     - name: Packer Run
-      run: packer build image.pkr.hcl
-    - name: Push to ghcr.io(amd64)
-      run: docker push ghcr.io/spyicydev/todo-server:amd64
-    - name: Push to ghcr.io(arm64)
-      run: docker push ghcr.io/spyicydev/todo-server:arm64
+      run: packer build image.pkr.hcl -var platform=linux/${{matrix.name-suffix}} -var path=todo-server-${{matrix.name-suffix}}
+    - name: Push to ghcr.io
+      run: docker push ghcr.io/spyicydev/todo-server:${{name-suffix}}
+  manifest:
+    runs-on: ubuntu-latest
+    name: Push Manifest to ghcr.io
+    needs: packer
+    steps:
     - name: Create merged manifest
       run: docker manifest create ghcr.io/spyicydev/todo-server:latest ghcr.io/spyicydev/todo-server:amd64 ghcr.io/spyicydev/todo-server:arm64
     - name: Push merged manifest

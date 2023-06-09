@@ -9,23 +9,14 @@ packer {
 
 variables {
   bind_port = "80"
+  platform = ""
+  path = ""
 }
 
-source "docker" "amd64" {
+source "docker" "image" {
   image  = "ubuntu:focal"
   commit = true
-  platform = "linux/amd64"
-  changes = [
-    "ENV BIND_PORT=${var.bind_port}",
-    "EXPOSE $BIND_PORT",
-    "ENTRYPOINT /tmp/todo-server"
-  ]
-}
-
-source "docker" "arm64" {
-  image  = "ubuntu:focal"
-  commit = true
-  platform = "linux/arm64"
+  platform = ${var.platform}
   changes = [
     "ENV BIND_PORT=${var.bind_port}",
     "EXPOSE $BIND_PORT",
@@ -36,11 +27,10 @@ source "docker" "arm64" {
 build {
   name = "todo-server"
   sources = [
-    "source.docker.amd64",
-    "source.docker.arm64"
+    "source.docker.image"
   ]
   provisioner "file" {
-    source = "todo-server"
+    source = ${var.path}
     destination = "/tmp/todo-server"
   }
   provisioner "file" {
@@ -53,7 +43,7 @@ build {
 
   post-processor "docker-tag" {
     repository = "ghcr.io/spyicydev/todo-server"
-    tags = ["${source.name}"]
+    tags = ["${var.platform}"]
   }
 }
 
