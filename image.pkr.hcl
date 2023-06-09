@@ -16,7 +16,7 @@ variables {
 source "docker" "image" {
   image  = "ubuntu:focal"
   commit = true
-  platform = ${var.platform}
+  platform = var.platform
   changes = [
     "ENV BIND_PORT=${var.bind_port}",
     "EXPOSE $BIND_PORT",
@@ -30,7 +30,7 @@ build {
     "source.docker.image"
   ]
   provisioner "file" {
-    source = ${var.path}
+    source = var.path
     destination = "/tmp/todo-server"
   }
   provisioner "file" {
