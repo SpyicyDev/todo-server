@@ -19,12 +19,12 @@ jobs:
       with:
         toolchain: nightly
     - name: Compile binary(amd64)
-      run: cargo build --release --target=x86_64-unknown-linux-gnu
+      run: cargo build --release --target=x86_64-unknown-linux-musl
     - name: Upload bin artifact
       uses: actions/upload-artifact@v3
       with:
         name: todo-server-amd64
-        path: target/x86_64-unknown-linux-gnu/release/todo-server
+        path: target/x86_64-unknown-linux-musl/release/todo-server
 
   build-arm:
     runs-on: ubuntu-latest
