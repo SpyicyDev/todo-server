@@ -12,5 +12,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v2
       - name: Terraform init
         run: terraform init
+      - name: Terraform destroy(to clear resources for new resources)
+        run: terraform destroy
       - name: Run Terraform
         run: terraform apply -auto-approve -var="do_token=${{secrets.DO_TOKEN}}" -var="cloudflare_api_token=${{secrets.CLOUDFLARE_API_TOKEN}}" -var="cloudflare_zone_id=${{secrets.CLOUDFLARE_ZONE_ID}}"
