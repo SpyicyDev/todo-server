@@ -39,6 +39,7 @@ resource "cloudflare_record" "server" {
   name = "alt"
   value = replace(digitalocean_app.todo-server.default_ingress, "https://", "")
   type = "CNAME"
+  proxied = true
 }
 
 resource "digitalocean_app" "todo-server" {
