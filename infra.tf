@@ -41,6 +41,10 @@ resource "cloudflare_record" "server" {
   type = "CNAME"
 }
 
+output "live_url" {
+  value = digitalocean_app.todo-server.live_url
+}
+
 resource "digitalocean_app" "todo-server" {
   spec {
     name = "todo-server"
