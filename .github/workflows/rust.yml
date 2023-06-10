@@ -8,6 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  PACKER_GITHUB_API_TOKEN: ${{github.token}}
 
 jobs:
   build-x86:
