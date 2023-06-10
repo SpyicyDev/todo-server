@@ -119,7 +119,7 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
     - name: Install Skopeo
-      run: apt-get -y update && apt-get -y install skopeo
+      run: sudo apt-get -y update && sudo apt-get -y install skopeo
     - name: Create merged manifest
       run: docker manifest create ghcr.io/spyicydev/todo-server:latest ghcr.io/spyicydev/todo-server:amd64 ghcr.io/spyicydev/todo-server:arm64
     - name: Push merged manifest
