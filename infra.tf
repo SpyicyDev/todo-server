@@ -43,8 +43,12 @@ resource "cloudflare_record" "server" {
 }
 */
 
-output "live_url" {
-  value = digitalocean_app.todo-server.live_url
+data "digitalocean_app" "example" {
+  app_id = digitalocean_app.todo-server.id
+}
+
+output "default_ingress" {
+  value = data.digitalocean_app.example.default_ingress
 }
 
 resource "digitalocean_app" "todo-server" {
