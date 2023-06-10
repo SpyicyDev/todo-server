@@ -34,21 +34,11 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_token
 }
 
-/*
 resource "cloudflare_record" "server" {
   zone_id = var.cloudflare_zone_id
   name = "alt"
-  value = digitalocean_app.todo-server.live_url
+  value = replace(digitalocean_app.todo-server.default_ingress, "https://", "")
   type = "CNAME"
-}
-*/
-
-data "digitalocean_app" "example" {
-  app_id = digitalocean_app.todo-server.id
-}
-
-output "default_ingress" {
-  value = data.digitalocean_app.example.default_ingress
 }
 
 resource "digitalocean_app" "todo-server" {
@@ -58,7 +48,6 @@ resource "digitalocean_app" "todo-server" {
 
     domain {
       name = "alt.mackhaymond.co"
-      type = "ALIAS"
     }
 
     service {
