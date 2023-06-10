@@ -21,4 +21,8 @@ resource "docker_image" "server_image" {
 resource "docker_container" "todo-server" {
     name = "todo-server"
     image = docker_image.server_image.image_id
+    ports {
+      internal = 80
+      external = 8080
+    }
 }

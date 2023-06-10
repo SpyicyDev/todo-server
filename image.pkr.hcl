@@ -18,7 +18,6 @@ source "docker" "image" {
   platform = "linux/${var.platform}"
   changes = [
     "ENV BIND_PORT=${var.bind_port}",
-    "EXPOSE $BIND_PORT",
     "ENTRYPOINT /tmp/todo-server"
   ]
 }
