@@ -19,9 +19,12 @@ jobs:
     - uses: actions-rust-lang/setup-rust-toolchain@v1
       with:
         toolchain: nightly
-        target: x86_64-unknown-linux-musl 
-    - name: Compile binary(amd64)
-      run: cargo build --release --target=x86_64-unknown-linux-musl
+     - name: Install cargo-binstall
+      run: curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+    - name: Install cross-rs
+      run: cargo binstall --no-confirm --force cross
+    - name: Compile binary(arm64)
+      run: cross build --release --target=aarch64-unknown-linux-musl
     - name: Upload bin artifact
       uses: actions/upload-artifact@v3
       with:
