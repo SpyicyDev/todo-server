@@ -54,6 +54,7 @@ resource "digitalocean_app" "todo-server" {
 
     domain {
       name = "alt.mackhaymond.co"
+      type = "ALIAS"
     }
 
     service {
