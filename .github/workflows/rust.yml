@@ -113,7 +113,16 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: login to docker.io
+      uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: Install Skopeo
+      run: apt-get -y update && apt-get -y install skopeo
     - name: Create merged manifest
       run: docker manifest create ghcr.io/spyicydev/todo-server:latest ghcr.io/spyicydev/todo-server:amd64 ghcr.io/spyicydev/todo-server:arm64
     - name: Push merged manifest
       run: docker manifest push ghcr.io/spyicydev/todo-server:latest
+    - name: Copy to Docker Hub
+      run: skopeo copy --all docker://ghcr.io/spyicydev/todo-server:latest docker://spyicydev/todo-server:latest

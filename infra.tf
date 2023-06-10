@@ -1,28 +1,65 @@
 terraform {
   required_providers {
-    docker = {
-      source = "kreuzwerker/docker"
-      version = "3.0.2"
+    digitalocean  = {
+      source = "digitalocean/digitalocean"
+      version = "~> 2.0"
+    }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 3.0"
     }
   }
 }
 
-provider "docker" {}
-
-data "docker_registry_image" "server_image" {
-    name = "ghcr.io/spyicydev/todo-server:latest"
+variable "do_token" {
+  sensitive = true
+  type = string
 }
 
-resource "docker_image" "server_image" {
-    name = data.docker_registry_image.server_image.name
-    pull_triggers = [data.docker_registry_image.server_image.sha256_digest]
+variable "cloudflare_api_token" {
+  sensitive = true
+  type = string
 }
 
-resource "docker_container" "todo-server" {
+variable "cloudflare_zone_id" {
+  sensitive = true
+  type = string
+}
+
+provider "digitalocean" {
+  token = var.do_token
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
+}
+
+resource "cloudflare_record" "server" {
+  zone_id = var.cloudflare_zone_id
+  name = "alt"
+  value = digitalocean_app.todo-server.live_url
+  type = "CNAME"
+}
+
+resource "digitalocean_app" "todo-server" {
+  spec {
     name = "todo-server"
-    image = docker_image.server_image.image_id
-    ports {
-      internal = 80
-      external = 8080
+    region = "nyc1"
+
+    domain {
+      name = "alt.mackhaymond.co"
     }
+
+    service {
+      name = "todo-server"
+      instance_count = 3
+      http_port = 80
+      image {
+        registry_type = "DOCKER_HUB"
+        registry = "spyicydev"
+        repository = "todo-server"
+        tag = "latest"
+      }
+    }
+  }
 }

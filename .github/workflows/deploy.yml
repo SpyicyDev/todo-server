@@ -1,0 +1,14 @@
+name: Deploy app to Digital Ocean
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Deploy:
+    name: Deploy to Digital Ocean(terraform)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: hashicorp/setup-terraform@v2
+      - name: Run Terraform
+        run: terraform apply -auto-approve -var=\"do_token=${{secrets.DO_TOKEN}}\" -var=\"cloudflare_api_token=${{secrets.CLOUDFLARE_API_TOKEN}}\" -var=\"cloudflare_zone_id=${{secrets.CLOUDFLARE_ZONE_ID}}\""
