@@ -69,6 +69,19 @@ resource "digitalocean_app" "todo-server" {
         repository = "todo-server"
         tag = "latest"
       }
+      env {
+        key = "DB_ADDRESS"
+        value = digitalocean_database_cluster.todo-server-db.private_uri
+      }
     }
   }
+}
+
+resource "digitalocean_database_cluster" "todo-server-db" {
+  name = "todo-server-db"
+  engine = "pg"
+  version = "11"
+  size = "db-s-1vcpu-1gb"
+  region = "nyc1"
+  node_count = 1
 }

@@ -105,7 +105,9 @@ async fn prep_sql() -> tokio_postgres::Client {
      */
 
     let (client, connection) =
-        tokio_postgres::connect("postgresql://doadmin:AVNS_AphIofhrOO6vcAN8gCP@db-postgresql-nyc1-78249-do-user-7865624-0.b.db.ondigitalocean.com:25060/defaultdb?sslmode=require", tls).await.unwrap();
+        tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().parse().unwrap(), tls)
+            .await
+            .unwrap();
 
     // The connection object performs the actual communication with the database,
     // so spawn it off to run on its own.
