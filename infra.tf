@@ -56,7 +56,7 @@ resource "digitalocean_app" "todo-server" {
     region = "nyc1"
 
     domain {
-      name = "alt.mackhaymond.co"
+      name = "todo_api.mackhaymond.co"
     }
 
     service {
