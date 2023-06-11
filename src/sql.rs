@@ -1,7 +1,7 @@
 //use openssl::ssl::SslMethod;
 //use postgres_openssl::MakeTlsConnector;
 use rustls::Certificate;
-use rustls_pemfile::certs;
+use rustls_pemfile::{certs, read_one};
 use std::io::BufReader;
 
 use std::env;
@@ -94,10 +94,20 @@ async fn prep_sql() -> tokio_postgres::Client {
     let f = f.as_bytes();
     println!("{:?}", f);
     let mut f = BufReader::new(f);
-    certs(&mut f)
+    let thing: rustls_pemfile::Item = read_one(&mut f).unwrap().unwrap();
+    let _ = root_store.add(&Certificate(
+        if let rustls_pemfile::Item::X509Certificate(c) = thing {
+            c
+        } else {
+            vec![]
+        },
+    ));
+    /*
+                   certs(&mut f)
         .unwrap()
         .iter()
         .for_each(|cert| root_store.add(&Certificate(cert.clone())).unwrap());
+    */
     let config = rustls::ClientConfig::builder()
         .with_safe_defaults()
         .with_root_certificates(root_store)
