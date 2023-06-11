@@ -5,6 +5,8 @@ use rustls::Certificate;
 use rustls_pemfile::certs;
 use std::io::BufReader;
 
+use std::env;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
