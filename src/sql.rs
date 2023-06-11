@@ -88,11 +88,8 @@ pub async fn inc_count() {
 async fn prep_sql() -> tokio_postgres::Client {
     let mut root_store = rustls::RootCertStore::empty();
     let f = env::var("CA_CERT").unwrap();
-    println!("{:?}", f);
     let f = f.as_str();
-    println!("{:?}", f);
     let f = f.as_bytes();
-    println!("{:?}", f);
     let mut f = BufReader::new(f);
     let thing: rustls_pemfile::Item = read_one(&mut f).unwrap().unwrap();
     let _ = root_store.add(&Certificate(
@@ -102,22 +99,13 @@ async fn prep_sql() -> tokio_postgres::Client {
             vec![]
         },
     ));
-    /*
-                   certs(&mut f)
-        .unwrap()
-        .iter()
-        .for_each(|cert| root_store.add(&Certificate(cert.clone())).unwrap());
-    */
+
     let config = rustls::ClientConfig::builder()
         .with_safe_defaults()
         .with_root_certificates(root_store)
         .with_no_client_auth();
     let tls = tokio_postgres_rustls::MakeRustlsConnect::new(config);
-    /*
-    let mut builder = openssl::ssl::SslConnector::builder(SslMethod::tls()).unwrap();
-    builder.set_ca_file("/tmp/ca-certificate.crt").unwrap();
-    let connector = MakeTlsConnector::new(builder.build());
-    */
+
     let (client, connection) =
         tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().as_str(), tls)
             .await
