@@ -5,11 +5,10 @@ on:
   release:
     types: [published]
 
-environment: production
-
 jobs:
   deploy:
     name: Deploy to Digital Ocean(terraform)
+    environment: production
     runs-on: ubuntu-latest
     outputs:
       uri: ${{ steps.extract.outputs.uri }}
