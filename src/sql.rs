@@ -1,6 +1,9 @@
+//use openssl::ssl::SslMethod;
+//use postgres_openssl::MakeTlsConnector;
+use rustls::Certificate;
+use rustls_pemfile::certs;
 use std::fs::File;
-use openssl::ssl::SslMethod;
-use postgres_openssl::MakeTlsConnector;
+use std::io::BufReader;
 
 use std::env;
 
@@ -84,12 +87,27 @@ pub async fn inc_count() {
 }
 
 async fn prep_sql() -> tokio_postgres::Client {
+    let mut root_store = rustls::RootCertStore::empty();
+    let f = env::var("CA_CERT").unwrap();
+    let f = f.as_str();
+    let f = f.as_bytes();
+    let mut f = BufReader::new(f);
+    certs(&mut f)
+        .unwrap()
+        .iter()
+        .for_each(|cert| root_store.add(&Certificate(cert.clone())).unwrap());
+    let config = rustls::ClientConfig::builder()
+        .with_safe_defaults()
+        .with_root_certificates(root_store)
+        .with_no_client_auth();
+    let tls = tokio_postgres_rustls::MakeRustlsConnect::new(config);
+    /*
     let mut builder = openssl::ssl::SslConnector::builder(SslMethod::tls()).unwrap();
     builder.set_ca_file("/tmp/ca-certificate.crt").unwrap();
     let connector = MakeTlsConnector::new(builder.build());
-
+    */
     let (client, connection) =
-        tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().as_str(), connector)
+        tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().as_str(), tls)
             .await
             .unwrap();
 
