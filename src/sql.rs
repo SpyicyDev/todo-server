@@ -1,7 +1,7 @@
 //use openssl::ssl::SslMethod;
 //use postgres_openssl::MakeTlsConnector;
 use rustls::Certificate;
-use rustls_pemfile::{certs, read_one};
+use rustls_pemfile::read_one;
 use std::io::BufReader;
 
 use std::env;
