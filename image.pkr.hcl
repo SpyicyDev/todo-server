@@ -31,10 +31,6 @@ build {
     source = "todo-server"
     destination = "/tmp/todo-server"
   }
-  provisioner "file" {
-    source = "ca-certificate.pem"
-    destination = "/tmp/ca-certificate.pem"
-  }
   provisioner "shell" {
     inline = ["chmod +x /tmp/todo-server"]
   }
