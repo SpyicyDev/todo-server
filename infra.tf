@@ -101,6 +101,6 @@ data "digitalocean_database_ca" "db" {
 }
 
 output "db_cert" {
-  value = nonsensitive(data.digitalocean_database_ca.db.certificate)
+  value = data.digitalocean_database_ca.db.certificate
   sensitive = false
 }
