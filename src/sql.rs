@@ -106,12 +106,18 @@ async fn prep_sql() -> tokio_postgres::Client {
     builder.set_ca_file("./ca-certificate.crt").unwrap();
     let connector = MakeTlsConnector::new(builder.build());
      */
-    println!("{}", env::var("DB_ADDRESS").unwrap().as_str());
+    // println!("{}", env::var("DB_ADDRESS").unwrap().as_str());
 
-    let (client, connection) =
-        tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().as_str(), NoTls)
-            .await
-            .unwrap();
+    let (client, connection) = tokio_postgres::connect(
+        env::var("DB_ADDRESS")
+            .unwrap()
+            .as_str()
+            .replace("sslmode=require", "sslmode=none")
+            .as_str(),
+        NoTls,
+    )
+    .await
+    .unwrap();
 
     // The connection object performs the actual communication with the database,
     // so spawn it off to run on its own.
