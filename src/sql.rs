@@ -107,7 +107,7 @@ async fn prep_sql() -> tokio_postgres::Client {
      */
 
     let (client, connection) =
-        tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().parse().unwrap(), tls)
+        tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().as_str(), tls)
             .await
             .unwrap();
 
