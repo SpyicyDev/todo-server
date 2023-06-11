@@ -71,7 +71,7 @@ resource "digitalocean_app" "todo-server" {
       }
       env {
         key = "DB_ADDRESS"
-        value = digitalocean_database_cluster.todo-server-db.private_uri
+        value = digitalocean_database_cluster.todo-server-db.uri
       }
     }
   }
