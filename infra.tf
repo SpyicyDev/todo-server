@@ -84,6 +84,16 @@ resource "digitalocean_database_cluster" "todo-server-db" {
   size = "db-s-1vcpu-1gb"
   region = "nyc1"
   node_count = 1
+  
+  provisioner "local-exec" {
+    command = "psql ${self.uri} -c 'CREATE TABLE todos(todo_id INT, todo_text VARCHAR(255));'
+  }
+  provisioner "local-exec" {
+    command = "psql ${self.uri} -c 'CREATE TABLE id(id INT);'
+  }
+  provisioner "local-exec" {
+    command = "psql ${self.uri} -c 'INSERT INTO id (id) VALUES (0);'
+  }
 }
 
 output "db_address" {
