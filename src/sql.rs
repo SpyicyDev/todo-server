@@ -112,7 +112,7 @@ async fn prep_sql() -> tokio_postgres::Client {
         env::var("DB_ADDRESS")
             .unwrap()
             .as_str()
-            .replace("sslmode=require", "sslmode=none")
+            .replace("sslmode=require", "sslmode=disable")
             .as_str(),
         NoTls,
     )
