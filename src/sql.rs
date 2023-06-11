@@ -106,6 +106,7 @@ async fn prep_sql() -> tokio_postgres::Client {
     builder.set_ca_file("./ca-certificate.crt").unwrap();
     let connector = MakeTlsConnector::new(builder.build());
      */
+    println!("{}", env::var("DB_ADDRESS").unwrap().as_str());
 
     let (client, connection) =
         tokio_postgres::connect(env::var("DB_ADDRESS").unwrap().as_str(), NoTls)
