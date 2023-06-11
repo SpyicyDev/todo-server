@@ -20,7 +20,7 @@ jobs:
           running-workflow-name: 'Deploy to Digital Ocean(terraform)'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 5
-          allowed-conclusions: success
+          allowed-conclusions: success,cancelled
       - name: Terraform init
         run: terraform init -backend-config="password=${{github.token}}"
       - name: Terraform destroy(to clear resources for new resources)
