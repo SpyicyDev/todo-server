@@ -35,15 +35,4 @@ jobs:
         run: terraform apply -auto-approve -var="do_token=${{secrets.DO_TOKEN}}" -var="cloudflare_api_token=${{secrets.CLOUDFLARE_API_TOKEN}}" -var="cloudflare_zone_id=${{secrets.CLOUDFLARE_ZONE_ID}}"
       - name: Extract DB URI
         id: extract
-        run: terraform output -json | jq -r '@sh "uri=\(.db_address.value)"' >> "$GITHUB_OUTPUT"
-  sql:
-    name: Scaffold DB
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - name: Create Todos table
-        run: psql ${{ needs.deploy.outputs.uri }} -c 'CREATE TABLE todos(todo_id INT, todo_text VARCHAR(255));'
-      - name: Create ID table
-        run: psql ${{ needs.deploy.outputs.uri }} -c 'CREATE TABLE id(id INT);'
-      - name: Insert ID into ID Table
-        run: psql ${{ needs.deploy.outputs.uri }} -c 'INSERT INTO id (id) VALUES (0);'
+        run: terraform output -json | jq -r ".db_cert.value"

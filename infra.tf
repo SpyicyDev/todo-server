@@ -96,7 +96,11 @@ resource "digitalocean_database_cluster" "todo-server-db" {
   }
 }
 
-output "db_address" {
-  value = nonsensitive(digitalocean_database_cluster.todo-server-db.uri)
+data "digitalocean_database_ca" "db" {
+  cluster_id = digitalocean_database_cluster.todo-server-db.id
+}
+
+output "db_cert" {
+  value = nonsensitive(data.digitalocean_database_ca.db.certificate)
   sensitive = false
 }
