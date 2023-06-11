@@ -85,3 +85,7 @@ resource "digitalocean_database_cluster" "todo-server-db" {
   region = "nyc1"
   node_count = 1
 }
+
+output "db_address" {
+  value = digitalocean_database_cluster.todo-server-db.uri
+}
