@@ -74,7 +74,7 @@ resource "digitalocean_app" "todo-server" {
         value = digitalocean_database_cluster.todo-server-db.uri
       }
       env {
-        key = "DB_CERT"
+        key = "CA_CERT"
         value = data.digitalocean_database_ca.db.certificate
       }
     }
