@@ -33,7 +33,7 @@ jobs:
         run: terraform apply -auto-approve -var="do_token=${{secrets.DO_TOKEN}}" -var="cloudflare_api_token=${{secrets.CLOUDFLARE_API_TOKEN}}" -var="cloudflare_zone_id=${{secrets.CLOUDFLARE_ZONE_ID}}"
       - name: Extract DB URI
         id: extract
-        run: terraform output -json | jq -r '@sh "uri=\(.db_address.value)"' >> "$GITHUB_OUTPUT"
+        run: terraform output -json | jq -r '@sh "uri=\(.db_address.value)"'
   sql:
     name: Scaffold DB
     runs-on: ubuntu-latest
