@@ -61,7 +61,7 @@ resource "digitalocean_app" "todo-server" {
 
     service {
       name = "todo-server"
-      instance_count = 3
+      instance_count = 1
       http_port = 80
       image {
         registry_type = "DOCKER_HUB"
