@@ -15,6 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
+      - name: Install jq
+        run: sudo apt-get -y update && sudo apt-get -y install jq
       - name: Wait for current build to finish
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
@@ -31,7 +33,7 @@ jobs:
         run: terraform apply -auto-approve -var="do_token=${{secrets.DO_TOKEN}}" -var="cloudflare_api_token=${{secrets.CLOUDFLARE_API_TOKEN}}" -var="cloudflare_zone_id=${{secrets.CLOUDFLARE_ZONE_ID}}"
       - name: Extract DB URI
         id: extract
-        run: terraform output -json 
+        run: terraform output -json | jq -r '@sh "uri=\(.db_address.value)"' >> "$GITHUB_OUTPUT"
   sql:
     name: Scaffold DB
     runs-on: ubuntu-latest
