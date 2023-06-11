@@ -73,6 +73,10 @@ resource "digitalocean_app" "todo-server" {
         key = "DB_ADDRESS"
         value = digitalocean_database_cluster.todo-server-db.uri
       }
+      env {
+        key = "DB_CERT"
+        value = data.digitalocean_database_ca.db.certificate
+      }
     }
   }
 }
@@ -100,7 +104,3 @@ data "digitalocean_database_ca" "db" {
   cluster_id = digitalocean_database_cluster.todo-server-db.id
 }
 
-output "db_cert" {
-  value = data.digitalocean_database_ca.db.certificate
-  sensitive = false
-}

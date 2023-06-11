@@ -2,7 +2,6 @@
 //use postgres_openssl::MakeTlsConnector;
 use rustls::Certificate;
 use rustls_pemfile::certs;
-use std::fs::File;
 use std::io::BufReader;
 
 use std::env;
