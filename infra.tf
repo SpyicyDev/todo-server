@@ -44,7 +44,7 @@ provider "cloudflare" {
 
 resource "cloudflare_record" "server" {
   zone_id = var.cloudflare_zone_id
-  name = "todo_api"
+  name = "todo-api"
   value = replace(digitalocean_app.todo-server.default_ingress, "https://", "")
   type = "CNAME"
   proxied = true
@@ -56,7 +56,7 @@ resource "digitalocean_app" "todo-server" {
     region = "nyc1"
 
     domain {
-      name = "todo_api.mackhaymond.co"
+      name = "todo-api.mackhaymond.co"
     }
 
     service {
