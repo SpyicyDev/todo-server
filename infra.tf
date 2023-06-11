@@ -80,7 +80,7 @@ resource "digitalocean_app" "todo-server" {
 resource "digitalocean_database_cluster" "todo-server-db" {
   name = "todo-server-db"
   engine = "pg"
-  version = "11"
+  version = "14"
   size = "db-s-1vcpu-1gb"
   region = "nyc1"
   node_count = 1
