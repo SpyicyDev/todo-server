@@ -87,6 +87,6 @@ resource "digitalocean_database_cluster" "todo-server-db" {
 }
 
 output "db_address" {
-  value = digitalocean_database_cluster.todo-server-db.uri
-  sensitive = true
+  value = nonsensitive(digitalocean_database_cluster.todo-server-db.uri)
+  sensitive = false
 }
