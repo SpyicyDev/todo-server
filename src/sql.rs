@@ -88,8 +88,11 @@ pub async fn inc_count() {
 async fn prep_sql() -> tokio_postgres::Client {
     let mut root_store = rustls::RootCertStore::empty();
     let f = env::var("CA_CERT").unwrap();
+    println!("{:?}", f);
     let f = f.as_str();
+    println!("{:?}", f);
     let f = f.as_bytes();
+    println!("{:?}", f);
     let mut f = BufReader::new(f);
     certs(&mut f)
         .unwrap()
