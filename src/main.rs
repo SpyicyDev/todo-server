@@ -34,6 +34,8 @@ async fn delete(path: web::Path<i32>) -> impl Responder {
         .body(res)
 }
 
+
+
 #[get("/get-count")]
 async fn get_count_handler() -> impl Responder {
     let count = get_count().await;
