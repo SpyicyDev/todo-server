@@ -1,8 +1,5 @@
 mod sql;
 
-
-
-
 use crate::sql::*;
 use std::env;
 
