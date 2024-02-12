@@ -3,9 +3,6 @@ mod sql;
 use crate::sql::*;
 use std::env;
 
-
-
-
 use actix_web::*;
 
 #[get("/get-todos")]
