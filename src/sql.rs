@@ -11,7 +11,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct TodoItem {
     pub todo_id: i32,
-
     pub todo_text: String,
 }
 
