@@ -14,6 +14,8 @@ pub struct TodoItem {
     pub todo_text: String,
 }
 
+
+
 pub async fn get_all_tasks() -> Option<Vec<TodoItem>> {
     let client = prep_sql().await;
 
