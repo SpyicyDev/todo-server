@@ -49,7 +49,7 @@ fi
 # https://github.com/numtide/devshell/issues/158
 PATH=${PATH#/path-not-set:}
 
-export DEVENV_PROFILE=/nix/store/1ggbbawiicaqvvb9gw7z5n0hqh89m0wh-devenv-profile
+export DEVENV_PROFILE=/nix/store/c5sazd881dm6jis73b8gqyvlq64kzlph-devenv-profile
 
 # add installed packages to PATH
 export PATH="$DEVENV_PROFILE/bin:$PATH"
@@ -64,13 +64,13 @@ export C_INCLUDE_PATH="$DEVENV_PROFILE/include:${C_INCLUDE_PATH-}"
 export XDG_DATA_DIRS="$DEVENV_PROFILE/share:${XDG_DATA_DIRS-}"
 export XDG_CONFIG_DIRS="$DEVENV_PROFILE/etc/xdg:${XDG_CONFIG_DIRS-}"
 
-export CFLAGS='\''-iframework /nix/store/1ggbbawiicaqvvb9gw7z5n0hqh89m0wh-devenv-profile/Library/Frameworks'\''
+export CFLAGS='\''-iframework /nix/store/c5sazd881dm6jis73b8gqyvlq64kzlph-devenv-profile/Library/Frameworks'\''
 export DEVENV_DOTFILE='\''/Users/mackhaymond/Desktop/coding/projects/todo-server/.devenv'\''
-export DEVENV_PROFILE='\''/nix/store/1ggbbawiicaqvvb9gw7z5n0hqh89m0wh-devenv-profile'\''
+export DEVENV_PROFILE='\''/nix/store/c5sazd881dm6jis73b8gqyvlq64kzlph-devenv-profile'\''
 export DEVENV_ROOT='\''/Users/mackhaymond/Desktop/coding/projects/todo-server'\''
 export DEVENV_STATE='\''/Users/mackhaymond/Desktop/coding/projects/todo-server/.devenv/state'\''
-export RUSTDOCFLAGS='\''-L framework=/nix/store/1ggbbawiicaqvvb9gw7z5n0hqh89m0wh-devenv-profile/Library/Frameworks'\''
-export RUSTFLAGS='\''-L framework=/nix/store/1ggbbawiicaqvvb9gw7z5n0hqh89m0wh-devenv-profile/Library/Frameworks'\''
+export RUSTDOCFLAGS='\''-L framework=/nix/store/c5sazd881dm6jis73b8gqyvlq64kzlph-devenv-profile/Library/Frameworks'\''
+export RUSTFLAGS='\''-L framework=/nix/store/c5sazd881dm6jis73b8gqyvlq64kzlph-devenv-profile/Library/Frameworks'\''
 export RUST_SRC_PATH='\''/nix/store/9lzjgzhmgjkgqz1pwr4wk8ipygwbmxsf-rust-src-stable-2024-02-08/lib/rustlib/src/rust/library'\''
 
 
@@ -97,7 +97,7 @@ fi
 
 mkdir -p .devenv
 rm -f .devenv/profile
-ln -s /nix/store/1ggbbawiicaqvvb9gw7z5n0hqh89m0wh-devenv-profile .devenv/profile
+ln -s /nix/store/c5sazd881dm6jis73b8gqyvlq64kzlph-devenv-profile .devenv/profile
 
 '
 export shellHook

@@ -35,6 +35,7 @@
                   naersk' = pkgs.callPackage inputs.naersk {};
         in rec {
             default = todo-server;
+            defaultPackage = default;
 
             todo-server = naersk'.buildPackage {
                 src = ./.;
