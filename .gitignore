@@ -2,3 +2,4 @@
 result
 terraform.tfstate
 terrafor.tfstate.backup
+.devenv
