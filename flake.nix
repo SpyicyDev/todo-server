@@ -30,7 +30,6 @@
         # module parameters provide easy access to attributes of the same
         # system.
 
-        # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
         packages = let
                   naersk' = pkgs.callPackage inputs.naersk {};
         in rec {
@@ -39,6 +38,15 @@
 
             todo-server = naersk'.buildPackage {
                 src = ./.;
+            };
+
+            image = pkgs.dockerTools.buildImage {
+                name = "todo-server";
+                tag = "latest";
+                config = {
+                    Cmd = [ "${config.packages.todo-server}/bin/todo-server" ];
+                    Env = [ "BIND_PORT=80" ];
+                };
             };
         };
 
